@@ -936,6 +936,19 @@ src="https://www.facebook.com/tr?id=2284369285700586&ev=PageView&noscript=1"
 <!-- 8s POPUP (ref image1) -->
 
 <!-- FORM MODAL -->
+<!-- 微信環境引導：微信封鎖外部App喚起，需用系統瀏覽器開啟才能加LINE -->
+<div id="wx-guide" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.88);flex-direction:column;align-items:center;justify-content:flex-start;padding:24px;text-align:center;color:#fff">
+  <div style="align-self:flex-end;font-size:44px;line-height:1;animation:wxbounce 1s infinite;margin-right:6px">⬆️</div>
+  <div style="margin-top:18px;font-size:20px;font-weight:900;line-height:1.7">
+    請點擊右上角「<span style="font-size:24px">⋯</span>」<br>
+    選擇「<span style="color:#FFD34D">在瀏覽器中開啟</span>」
+  </div>
+  <div style="margin-top:14px;font-size:15px;color:#ddd;line-height:1.8">
+    即可自動開啟 LINE<br>加老師好友、領取上課連結 🎁
+  </div>
+  <div onclick="document.getElementById('wx-guide').style.display='none'" style="margin-top:26px;padding:10px 26px;border:1px solid #999;border-radius:22px;font-size:14px;color:#ccc">我知道了</div>
+</div>
+<style>@keyframes wxbounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}</style>
 <div class="overlay" id="form-modal" onclick="closeFormModal(event)">
   <div class="mbox">
     <button class="mclose" onclick="closeFormModal()">✕</button>
@@ -1102,17 +1115,34 @@ function submitModal(){
   // LINE ti/p 加好友链接不支持预填讯息，点开即直达「加入好友」页面
   function _setLINE(url){if(_redirected||!url)return;lineUrl=url;if(waBtn)waBtn.href=url;if(waImg)waImg.href=url;}
   _setLINE(lineUrl);
+  var IS_WECHAT=/MicroMessenger/i.test(navigator.userAgent||'');
+  function _showWxGuide(){
+    var g=document.getElementById('wx-guide');if(g)g.style.display='flex';
+    var cd=document.getElementById('wa-countdown');
+    if(cd)cd.innerHTML='微信內無法直接開啟 LINE，請按提示用瀏覽器開啟';
+  }
   function _go(){
     if(_redirected)return;_redirected=true;
     if(waBtn)waBtn.href=lineUrl;if(waImg)waImg.href=lineUrl;
+    if(IS_WECHAT){_showWxGuide();return;} // 微信：整頁跳去 line.me 也喚不起 App，只會卡住
     var _w=window.open(lineUrl,'_blank');if(!_w){window.location.href=lineUrl;}
+  }
+  // 微信內點按鈕/圖片也攔下來，改示引導
+  if(IS_WECHAT){
+    [waBtn,waImg].forEach(function(el){
+      if(el)el.addEventListener('click',function(ev){ev.preventDefault();_showWxGuide();});
+    });
   }
   // 提交到 Apps Script：服務端做全域性輪流分配 + 重複號碼固定原客服，並寫入名單
   var params=new URLSearchParams({name:n,phone:fp,email:em,line:l||'',country:cn,course:COURSE_NAME});
   fetch(GAS_URL+'?'+params.toString()).then(function(r){return r.json();}).then(function(res){
     if(res&&res.ok&&res.staff&&LINE_LINKS[res.staff]){staffName=res.staff;_setLINE(LINE_LINKS[res.staff]);}
     _replied=true;
-  }).catch(function(){_replied=true;});
+  }).catch(function(){
+    // fetch 失敗（網路受限/被瀏覽器攔截）→ 改用圖片請求再送一次，只求送達、不讀回應
+    try{new Image().src=GAS_URL+'?'+params.toString();}catch(e){}
+    _replied=true;
+  });
   if(typeof fbq==='function')fbq('track','CompleteRegistration');
   if(typeof gtag==='function'){gtag('event','generate_lead',{'send_to':'AW-16523264778'});}
   // 倒數計時結束後：必須等服務端分配結果回來才跳轉（最多再等8秒），
