@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta property="og:type" content="website">
+<meta property="og:title" content="客户名单管理后台">
+<meta property="og:description" content="汇成百年 · 课程报名名单管理">
+<meta property="og:image" content="https://xf.zwq1314.com/share.jpg">
 <title>汇成百年 · 客户管理</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -292,12 +296,12 @@ function staffMatch(rowStaff, groupName){
 }
 
 // ★ 统一脚本网址（播种幸福+AI财道共用一张表）：若重新部署 Apps Script 产生了新网址，替换下面这一行即可
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxG6OpWTEjU_iFP6wddgG0pVA7uvzOKjrAykt_SUmskgqHOgbOSBrGVuwGO1fhnF10/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPr7rYQejBA3K7Dw3AoIaTAATZizRWiH1Ya1j-weoP1cvSD9XfKVnViCkfuAYvQgM/exec';
 const COURSE_AI = 'AI财道';
 const COURSE_SEED = '播种幸福';
 const PAGE_SIZE = 15;
 
-const ALL_TAGS = ['🔥 高意向','💰 已付款','🤔 考虑中','❌ 不感兴趣','📞 需回电','🤝 汇播合伙人','🎓 训练营'];
+const ALL_TAGS = ['🔥 高意向','💰 已付款','✅ 确定上课','🔕 未回复','📅 下一期','🤔 考虑中','❌ 不感兴趣','📞 需回电','🤝 汇播合伙人','🎓 训练营'];
 
 let currentUser=null, allRows=[], filteredRows=[];
 let currentPage=1, currentFilter='all', activeTagFilter=null, activeCourseFilter=null;

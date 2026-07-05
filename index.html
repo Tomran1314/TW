@@ -1103,6 +1103,7 @@ function submitModal(){
   var fp=c+p,cn=(phoneRules[c]||{}).name||c;
   // 客戶端預選（僅作後端不可達時的兜底顯示），最終以 Apps Script 服務端分配為準
   // 本頁（台灣/香港站）一律分配至 LINE 三人池：志穎/馨予/越聰 輪流
+  if(!window._waSeeded){_waIndexTW=Math.floor(Math.random()*_waTW.length);window._waSeeded=1;}
   var sel=_waTW[_waIndexTW%_waTW.length]; _waIndexTW++;
   var num=sel.num,staffName=sel.name;
   var lineUrl=LINE_LINKS[staffName];
