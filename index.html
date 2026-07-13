@@ -1114,21 +1114,40 @@ function submitModal(){
   if(!window._waSeeded){_waIndexTW=Math.floor(Math.random()*99);window._waSeeded=1;}
   var sel=_pool[_waIndexTW%_pool.length]; _waIndexTW++;
   var num=sel.num,staffName=sel.name;
-  var lineUrl=LINE_LINKS[staffName];
   document.getElementById('form-screen').style.display='none';
   document.getElementById('success-screen').style.display='block';
   document.body.style.overflow='';
   var waBtn=document.getElementById('wa-btn');
   var waImg=document.getElementById('wa-img-link');
   var _redirected=false,_replied=false;
-  // LINE ti/p 加好友链接不支持预填讯息，点开即直达「加入好友」页面
-  function _setLINE(url){if(_redirected||!url)return;lineUrl=url;if(waBtn)waBtn.href=url;if(waImg)waImg.href=url;}
+  // ★ 与后端对齐：服务端为最终裁决（查重会固定原客服）。有 LINE 用 LINE 加好友；
+  //   原客服没有 LINE（如 Sam/大鹏）则改用其 WhatsApp，确保「表格记谁 = 学员加谁」
+  var _msgTC=encodeURIComponent('老師您好，我想預約《'+COURSE_NAME_TC+'》直播課學習，我是：'+n);
+  function _contactUrl(st,nm){
+    if(LINE_LINKS[st])return LINE_LINKS[st];
+    var d=String(nm||'').replace(/\D/g,'');
+    if(d.length>=10)return 'https://wa.me/'+d+'?text='+_msgTC;
+    return null;
+  }
+  var lineUrl=_contactUrl(staffName,num);
+  function _setLINE(url){
+    if(_redirected||!url)return;lineUrl=url;
+    if(waBtn)waBtn.href=url;if(waImg)waImg.href=url;
+    var isWA=url.indexOf('wa.me')>-1;
+    if(waBtn)waBtn.innerHTML='<span class="wa-icon">💬</span> '+(isWA?'加 WhatsApp · 領上課連結與提醒':'加 LINE 好友 · 領上課連結與提醒');
+    var sn=document.querySelector('.s-next');
+    if(sn)sn.textContent=isWA?'👇 最後一步：加 WhatsApp，領取上課連結與提醒 👇':'👇 最後一步：加 LINE 好友，領取上課連結與提醒 👇';
+    var cdEl=document.getElementById('wa-countdown');
+    if(cdEl){var ns=cdEl.querySelector('#wa-cd-num');
+      if(ns)cdEl.innerHTML='<span id="wa-cd-num">'+ns.textContent+'</span> 秒後自動'+(isWA?'跳轉 WhatsApp':'開啟 LINE 加好友')+' →';}
+    window._cdMode=isWA?'WhatsApp':'LINE';
+  }
   _setLINE(lineUrl);
   var IS_WECHAT=/MicroMessenger/i.test(navigator.userAgent||'');
   function _showWxGuide(){
     var g=document.getElementById('wx-guide');if(g)g.style.display='flex';
     var cd=document.getElementById('wa-countdown');
-    if(cd)cd.innerHTML='微信內無法直接開啟 LINE，請按提示用瀏覽器開啟';
+    if(cd)cd.innerHTML='微信內無法直接開啟 '+(window._cdMode||'LINE')+'，請按提示用瀏覽器開啟';
   }
   function _go(){
     if(_redirected)return;_redirected=true;
@@ -1148,7 +1167,7 @@ function submitModal(){
   if(window._subPhone===fp){_replied=true;}
   else{window._subPhone=fp;
   fetch(GAS_URL+'?'+params.toString()).then(function(r){return r.json();}).then(function(res){
-    if(res&&res.ok&&res.staff&&LINE_LINKS[res.staff]&&(c==='+886'||res.staff!=='馨予老师')){staffName=res.staff;_setLINE(LINE_LINKS[res.staff]);}
+    if(res&&res.ok&&res.staff){var _u=_contactUrl(String(res.staff),res.num);if(_u){staffName=String(res.staff);_setLINE(_u);}}
     _replied=true;
   }).catch(function(){
     // fetch 失敗（網路受限/被瀏覽器攔截）→ 改用圖片請求再送一次，只求送達、不讀回應
