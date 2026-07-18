@@ -965,6 +965,7 @@ src="https://www.facebook.com/tr?id=2284369285700586&ev=PageView&noscript=1"
         <div class="s-info-row">📅&nbsp; <span id="s-camp-date">7月14-17日</span> 每晚19:00開課（台灣時間）</div>
         <div class="s-info-row">💻&nbsp; 線上直播</div>
         <div class="s-info-row">❤️&nbsp; 特殊情況：可申請直播回放</div>
+        <div class="s-info-row">🎁&nbsp; LINE領取上課連結與提醒，周老師贈送《AI財富覺醒手冊》</div>
       </div>
       <div class="s-next">👇 最後一步：加 LINE 好友，領取上課連結與提醒 👇</div>
       <a id="wa-btn" class="wa-btn" href="#" target="_blank" rel="noopener">
@@ -1176,11 +1177,13 @@ function submitModal(){
 // Countdown — 課程時間表：倒數目標與頁面日期按階段自動切換（皆為台灣時間 UTC+8；月份從0起算，6=7月）
 // 階段1：即日 → 7/14 深夜12:00　倒數 7/14 19:00（7月14-17日 4天營）
 // 階段2：7/15 00:00 → 7/18 深夜12:00　倒數 7/18 19:00（全球直播）
-// 階段3：7/19 00:00 之後　倒數 7/22 19:00（7月22-25日）；彈窗直播日自動改 7月25日
+// 階段3：7/19 00:00 → 7/21 晚上11:00　倒數 7/21 19:00（7月21-24日 4天營）
+// 階段4：7/21 晚上11:00 之後　倒數 7/25（週六）19:00 全球直播
 var CD_SCHEDULE = [
   { until: Date.UTC(2026,6,14,16,0,0), target: Date.UTC(2026,6,14,11,0,0), label: '📅 7月14-17日 · 每晚 19:00 開課',        live: '7月18日（週六）', camp: '7月14-17日' },
   { until: Date.UTC(2026,6,18,16,0,0), target: Date.UTC(2026,6,18,11,0,0), label: '📅 7月18日（週六）· 晚上 19:00 全球直播', live: '7月18日（週六）', camp: '7月14-17日' },
-  { until: Date.UTC(2026,6,26,16,0,0), target: Date.UTC(2026,6,22,11,0,0), label: '📅 7月22-25日 · 每晚 19:00 開課',        live: '7月25日（週六）', camp: '7月22-25日' }
+  { until: Date.UTC(2026,6,21,15,0,0), target: Date.UTC(2026,6,21,11,0,0), label: '📅 7月21-24日 · 每晚 19:00 開課',        live: '7月25日（週六）', camp: '7月21-24日' },
+  { until: Date.UTC(2026,7,2,16,0,0),  target: Date.UTC(2026,6,25,11,0,0), label: '📅 7月25日（週六）· 晚上 19:00 全球直播', live: '7月25日（週六）', camp: '7月21-24日' }
 ];
 function _cdStage(){
   var now = Date.now();
