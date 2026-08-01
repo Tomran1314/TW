@@ -1035,18 +1035,20 @@ var _waAll=[
   {name:'越聪老师',num:'601169479857'},
   {name:'馨予老师',num:'60139111413'},
   {name:'齐得老师',num:'601139410137'},
+  {name:'丽娜老师',num:'60177961931'},
   {name:'程章凯老师',num:'60126122651'},
   {name:'Sam老师',num:'601170225883'},
   {name:'小何老师',num:'60145461319'},
   {name:'大鹏老师',num:'60173134319'}
 ];
-var _waTW=_waAll.slice(0,5); // 台灣池：志穎/越聰/馨予/齊得/程章凱 5人輪流
+var _waTW=_waAll.slice(0,6); // 台灣池：志穎/越聰/馨予/齊得/麗娜/程章凱 6人輪流
 // ★ 台湾/香港站：报名后加 LINE 好友（仅前3位老师有 LINE，本页所有学员均分配至此3位）
 var LINE_LINKS={
   '志颖老师':'https://line.me/ti/p/hjUysbb98V',
   '馨予老师':'https://line.me/ti/p/ZcA-ek26fZ',
   '越聪老师':'https://line.me/ti/p/35tf8BCqSe',
   '齐得老师':'https://line.me/ti/p/rLY3v6en8k',
+  '丽娜老师':'https://line.me/ti/p/5fY9zQ3qLv',
   '程章凯老师':'https://line.me/ti/p/ZxLrfaFqdr'
 };
 var _waIndex=0;var _waIndexTW=0;
@@ -1115,7 +1117,7 @@ function submitModal(){
   // 客戶端預選（僅作後端不可達時的兜底顯示），最終以 Apps Script 服務端分配為準
   // 分配規則：馨予/齊得只服務台灣(+886)名單；其餘國家在 志穎/越聰 中輪流
   var _poolTW=_waTW; // 台灣池：志穎/越聰/馨予/齊得
-  var _poolIntl=_waTW.filter(function(x){return x.name!=='馨予老师'&&x.name!=='齐得老师';}); // 國際池：志穎/越聰/程章凱
+  var _poolIntl=_waTW.filter(function(x){return x.name!=='馨予老师'&&x.name!=='齐得老师'&&x.name!=='丽娜老师';}); // 國際池：志穎/越聰/程章凱
   var _pool=(c==='+886')?_poolTW:_poolIntl;
   if(!window._waSeeded){_waIndexTW=Math.floor(Math.random()*99);window._waSeeded=1;}
   var sel=_pool[_waIndexTW%_pool.length]; _waIndexTW++;
